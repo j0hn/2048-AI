@@ -65,7 +65,7 @@ KeyboardInputManager.prototype.listen = function () {
   var runButton = document.getElementById('run-button');
   runButton.addEventListener('click', function(e) {
     e.preventDefault();
-    self.emit('run')
+    self.emit('run_bot')
   })
 
 

@@ -25,6 +25,15 @@ function GameManager(size, InputManager, Actuator) {
     }
   }.bind(this));
 
+  this.inputManager.on('run_bot', function() {
+    if (this.running) {
+      this.running = false;
+    } else {
+      this.running = true;
+      this.run_bot()
+    }
+  }.bind(this));
+
   this.setup();
 }
 
@@ -42,6 +51,9 @@ GameManager.prototype.setup = function () {
   this.grid.addStartTiles();
 
   this.ai           = new AI(this.grid);
+  this.clock_bot    = new ClockBot(this.grid);
+  this.hos_bot      = new HOSBot(this.grid);
+  this.random_bot   = new RandomBot(this.grid);
 
   this.score        = 0;
   this.over         = false;
@@ -95,3 +107,17 @@ GameManager.prototype.run = function() {
     }, timeout);
   }
 }
+
+// moves continuously until game is over
+GameManager.prototype.run_bot = function() {
+  var movement = this.hos_bot.move();
+  this.move(movement);
+  var timeout = animationDelay;
+  if (this.running && !this.over && !this.won) {
+    var self = this;
+    setTimeout(function(){
+      self.run_bot();
+    }, timeout);
+  }
+}
+
